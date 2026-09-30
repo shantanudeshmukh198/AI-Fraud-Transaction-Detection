@@ -1,0 +1,222 @@
+/* =========================================================
+   FRAUDGUARD - ANALYTICS PAGE
+   ========================================================= */
+
+
+/* =========================================================
+   ANALYTICS GRID
+   ========================================================= */
+
+.analytics-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   CHART CARD
+   ========================================================= */
+
+.chart-card {
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+
+.chart-card.full-width-card {
+    width: 100%;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   CHART HEADER
+   ========================================================= */
+
+.chart-header {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+
+.chart-header h2 {
+    color: #111827;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    margin: 0;
+}
+
+
+.chart-header p {
+    color: #6b7280;
+
+    font-size: 12px;
+
+    margin-top: 5px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   CHART CONTAINER
+   ========================================================= */
+
+.chart-container {
+    position: relative;
+
+    width: 100%;
+
+    height: 300px;
+}
+
+
+.chart-container.large-chart {
+    height: 360px;
+}
+
+
+.chart-container canvas {
+    width: 100% !important;
+
+    height: 100% !important;
+}
+
+
+/* =========================================================
+   ANALYTICS LOADING
+   ========================================================= */
+
+#analyticsLoading {
+    margin: 20px 0;
+
+    padding: 18px;
+
+    text-align: center;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   ANALYTICS ERROR
+   ========================================================= */
+
+#analyticsError {
+    margin: 20px 0;
+
+    padding: 14px 16px;
+
+    border-radius: 9px;
+
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+
+    color: #991b1b;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .analytics-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .chart-container {
+        height: 280px;
+    }
+
+
+    .chart-container.large-chart {
+        height: 320px;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .chart-card {
+        padding: 17px;
+    }
+
+
+    .chart-header h2 {
+        font-size: 16px;
+    }
+
+
+    .chart-container {
+        height: 240px;
+    }
+
+
+    .chart-container.large-chart {
+        height: 270px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .chart-container {
+        height: 220px;
+    }
+
+
+    .chart-container.large-chart {
+        height: 240px;
+    }
+
+}

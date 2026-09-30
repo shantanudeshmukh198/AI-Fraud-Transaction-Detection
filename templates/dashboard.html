@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>FraudGuard | Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='common.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header class="navbar">
+
+        <div class="nav-container">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="brand"
+            >
+
+                <span class="brand-icon">
+                    🛡️
+                </span>
+
+                <span>
+                    FraudGuard
+                </span>
+
+            </a>
+
+
+            <nav class="nav-links">
+
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="active"
+                >
+                    Dashboard
+                </a>
+
+                <a href="{{ url_for('detect') }}">
+                    Detect Fraud
+                </a>
+
+                <a href="{{ url_for('transactions') }}">
+                    Transactions
+                </a>
+
+                <a href="{{ url_for('analytics') }}">
+                    Analytics
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="page-container">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <section class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Fraud Detection Dashboard
+                </h1>
+
+                <p>
+                    Overview of transactions and fraud detection
+                    activity.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('detect') }}"
+                class="primary-btn"
+            >
+                Detect New Transaction
+            </a>
+
+        </section>
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+        <section class="stats-grid">
+
+
+            <!-- TOTAL TRANSACTIONS -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📊
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        Total Transactions
+                    </span>
+
+                    <strong id="totalTransactions">
+                        --
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- FRAUD -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🚨
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        Fraud Transactions
+                    </span>
+
+                    <strong id="fraudTransactions">
+                        --
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- NORMAL -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ✓
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        Normal Transactions
+                    </span>
+
+                    <strong id="normalTransactions">
+                        --
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- FRAUD RATE -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📈
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        Fraud Rate
+                    </span>
+
+                    <strong id="fraudRate">
+                        --
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             SECONDARY STATISTICS
+        ================================================== -->
+
+        <section class="stats-grid secondary-stats">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ₹
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        Total Transaction Amount
+                    </span>
+
+                    <strong id="totalAmount">
+                        --
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🏪
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        Total Merchants
+                    </span>
+
+                    <strong id="totalMerchants">
+                        --
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    👥
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        Total Customers
+                    </span>
+
+                    <strong id="totalCustomers">
+                        --
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⚠️
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        High Risk Transactions
+                    </span>
+
+                    <strong id="highRiskTransactions">
+                        --
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             RECENT TRANSACTIONS
+        ================================================== -->
+
+        <section class="content-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Recent Transactions
+                    </h2>
+
+                    <p>
+                        Latest transactions analyzed by FraudGuard.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('transactions') }}"
+                    class="secondary-btn"
+                >
+                    View All
+                </a>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ID
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Merchant
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Risk
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="recentTransactions">
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="empty-state"
+                            >
+                                Loading transactions...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             QUICK ACTIONS
+        ================================================== -->
+
+        <section class="content-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Quick Actions
+                    </h2>
+
+                    <p>
+                        Access the main FraudGuard modules.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="quick-actions">
+
+
+                <a
+                    href="{{ url_for('detect') }}"
+                    class="quick-action"
+                >
+
+                    <span class="quick-icon">
+                        🔍
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Detect Fraud
+                        </h3>
+
+                        <p>
+                            Analyze a new transaction.
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('transactions') }}"
+                    class="quick-action"
+                >
+
+                    <span class="quick-icon">
+                        📋
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Transactions
+                        </h3>
+
+                        <p>
+                            View and manage transaction history.
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('analytics') }}"
+                    class="quick-action"
+                >
+
+                    <span class="quick-icon">
+                        📊
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Analytics
+                        </h3>
+
+                        <p>
+                            Explore fraud detection analytics.
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script
+        src="{{ url_for('static', filename='common.js') }}"
+    ></script>
+
+</body>
+
+</html>

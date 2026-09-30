@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FraudGuard - Detect Fraud</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='detect.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">🛡️ FraudGuard</div>
+    <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/detect" class="active">Detect Fraud</a>
+        <a href="/transactions">Transactions</a>
+        <a href="/analytics">Analytics</a>
+    </div>
+</nav>
+
+<main class="container">
+
+    <div class="page-header">
+        <h1>Fraud Detection</h1>
+        <p>Enter transaction details to detect suspicious activity.</p>
+    </div>
+
+    <form id="fraudForm">
+
+        <!-- CUSTOMER -->
+        <section class="card">
+            <h2>Customer Details</h2>
+
+            <div class="form-group">
+                <label>Customer Type</label>
+                <select id="customer_type" required>
+                    <option value="">Select Customer Type</option>
+                    <option value="existing">Existing Customer</option>
+                    <option value="new">New Customer</option>
+                </select>
+            </div>
+
+            <!-- EXISTING CUSTOMER -->
+            <div id="existingCustomerBox" style="display:none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Select Customer</label>
+                        <select id="customer_id">
+                            <option value="">Select Customer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <input type="text" id="customer_name" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW CUSTOMER -->
+            <div id="newCustomerBox" style="display:none;">
+                <div class="form-group">
+                    <label>Customer Name</label>
+                    <input type="text" id="new_customer_name" placeholder="Enter customer name">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" id="dob" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" id="age" readonly placeholder="Auto calculated">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Occupation</label>
+                    <select id="job" required>
+                        <option value="">Select Occupation</option>
+                        <option value="Businessman">Businessman</option>
+                        <option value="Doctor">Doctor</option>
+                        <option value="Engineer">Engineer</option>
+                        <option value="Farmer">Farmer</option>
+                        <option value="Government Employee">Government Employee</option>
+                        <option value="Lawyer">Lawyer</option>
+                        <option value="Private Employee">Private Employee</option>
+                        <option value="Professor">Professor</option>
+                        <option value="Student">Student</option>
+                        <option value="Teacher">Teacher</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" id="state" placeholder="State" required>
+                </div>
+
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="city" placeholder="City" required>
+                </div>
+            </div>
+
+            <!-- LOCATION DATA -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>ZIP Code</label>
+                    <input type="number" id="zip_code" placeholder="Enter ZIP Code">
+                </div>
+
+                <div class="form-group">
+                    <label>City Population</label>
+                    <input type="number" id="city_population" placeholder="Enter city population">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Latitude</label>
+                    <input type="number" id="latitude" step="any" placeholder="Example: 20.9374">
+                </div>
+
+                <div class="form-group">
+                    <label>Longitude</label>
+                    <input type="number" id="longitude" step="any" placeholder="Example: 77.7796">
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ACCOUNT & DEVICE -->
+        <section class="card">
+            <h2>Account & Device</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Account</label>
+                    <select id="account_id">
+                        <option value="">Select Account</option>
+                        <option value ="0">saving</option>
+                        <option value = "1">current</option>
+                    </select>
+                </div>
+
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>New Device</label>
+                    <select id="new_device" required>
+                        <option value="">Select</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>International Transaction</label>
+                    <select id="is_international" required>
+                        <option value="">Select</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRANSACTION -->
+        <section class="card">
+            <h2>Transaction Details</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="amount" min="1" step="0.01" placeholder="Enter amount" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Transaction Type</label>
+                    <select id="transaction_type" required>
+                        <option value="">Select Transaction Type</option>
+                        <option value="Purchase">Purchase</option>
+                        <option value="Payment">Payment</option>
+                        <option value="Transfer">Transfer</option>
+                        <option value="Withdrawal">Withdrawal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Transaction Date & Time</label>
+                    <input type="datetime-local" id="transaction_time" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Merchant</label>
+                    <select id="merchant_id" required>
+                        <option value="">Select Merchant</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODEL -->
+        <section class="card">
+            <h2>Select ML Model</h2>
+
+            <div class="model-grid">
+
+                <label class="model-card selected">
+                    <input type="radio" name="model" value="xgboost" checked>
+                    <span>
+                        <strong>Tuned XGBoost</strong>
+                        <small>Recommended model</small>
+                    </span>
+                </label>
+
+                <label class="model-card">
+                    <input type="radio" name="model" value="random_forest">
+                    <span>
+                        <strong>Random Forest</strong>
+                        <small>Ensemble model</small>
+                    </span>
+                </label>
+
+                <label class="model-card">
+                    <input type="radio" name="model" value="logistic_regression">
+                    <span>
+                        <strong>Logistic Regression</strong>
+                        <small>Linear model</small>
+                    </span>
+                </label>
+
+            </div>
+        </section>
+
+        <div id="formError" class="error-message" style="display:none;"></div>
+
+        <button type="submit" id="predictBtn" class="primary-btn">
+            🔍 Detect Fraud
+        </button>
+
+    </form>
+
+    <!-- LOADING -->
+    <div id="loading" class="loading-box" style="display:none;">
+        <div class="loader"></div>
+        <p>Analyzing transaction...</p>
+    </div>
+
+    <!-- RESULT -->
+    <div id="resultBox" class="result-box" style="display:none;">
+
+        <h2 id="resultTitle"></h2>
+
+        <div class="result-details">
+
+            <div>
+                <span>Prediction</span>
+                <strong id="prediction"></strong>
+            </div>
+
+            <div>
+                <span>Fraud Probability</span>
+                <strong id="probability"></strong>
+            </div>
+
+            <div>
+                <span>Risk Level</span>
+                <strong id="riskLevel"></strong>
+            </div>
+
+            <div>
+                <span>Model</span>
+                <strong id="usedModel"></strong>
+            </div>
+
+        </div>
+
+        <p id="resultMessage"></p>
+
+    </div>
+
+</main>
+
+<script src="{{ url_for('static', filename='common.js') }}"></script>
+<script src="{{ url_for('static', filename='fraud.js') }}"></script>
+
+</body>
+</html>

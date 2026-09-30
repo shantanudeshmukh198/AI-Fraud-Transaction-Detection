@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>FraudGuard | Transactions</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='common.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header class="navbar">
+
+        <div class="nav-container">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="brand"
+            >
+
+                <span class="brand-icon">
+                    🛡️
+                </span>
+
+                <span>
+                    FraudGuard
+                </span>
+
+            </a>
+
+
+            <nav class="nav-links">
+
+                <a href="{{ url_for('dashboard') }}">
+                    Dashboard
+                </a>
+
+                <a href="{{ url_for('detect') }}">
+                    Detect Fraud
+                </a>
+
+                <a
+                    href="{{ url_for('transactions') }}"
+                    class="active"
+                >
+                    Transactions
+                </a>
+
+                <a href="{{ url_for('analytics') }}">
+                    Analytics
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="page-container">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <section class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Transactions
+                </h1>
+
+                <p>
+                    View, search and manage analyzed transactions.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('detect') }}"
+                class="primary-btn"
+            >
+                + New Detection
+            </a>
+
+        </section>
+
+
+        <!-- =================================================
+             SUMMARY
+        ================================================== -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📊
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong id="transactionCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🚨
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        Fraud
+                    </span>
+
+                    <strong id="fraudCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ✓
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        Normal
+                    </span>
+
+                    <strong id="normalCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⚠️
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        High Risk
+                    </span>
+
+                    <strong id="highRiskCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             TRANSACTION TABLE CARD
+        ================================================== -->
+
+        <section class="content-card">
+
+
+            <!-- =================================================
+                 FILTER BAR
+            ================================================== -->
+
+            <div class="filter-bar">
+
+
+                <!-- SEARCH -->
+
+                <div class="search-box">
+
+                    <label for="searchInput">
+                        Search
+                    </label>
+
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Search transaction, merchant..."
+                    >
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="filter-group">
+
+                    <label for="statusFilter">
+                        Status
+                    </label>
+
+                    <select id="statusFilter">
+
+                        <option value="">
+                            All Status
+                        </option>
+
+                        <option value="FRAUD">
+                            Fraud
+                        </option>
+
+                        <option value="NORMAL">
+                            Normal
+                        </option>
+
+                        <option value="GENUINE">
+                            Genuine
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- RISK -->
+
+                <div class="filter-group">
+
+                    <label for="riskFilter">
+                        Risk
+                    </label>
+
+                    <select id="riskFilter">
+
+                        <option value="">
+                            All Risk
+                        </option>
+
+                        <option value="HIGH">
+                            High
+                        </option>
+
+                        <option value="MEDIUM">
+                            Medium
+                        </option>
+
+                        <option value="LOW">
+                            Low
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- TYPE -->
+
+                <div class="filter-group">
+
+                    <label for="typeFilter">
+                        Type
+                    </label>
+
+                    <select id="typeFilter">
+
+                        <option value="">
+                            All Types
+                        </option>
+
+                        <option value="POS">
+                            POS
+                        </option>
+
+                        <option value="Online">
+                            Online
+                        </option>
+
+                        <option value="ATM">
+                            ATM
+                        </option>
+
+                        <option value="Transfer">
+                            Transfer
+                        </option>
+
+                        <option value="Cash">
+                            Cash
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- RESET -->
+
+                <button
+                    type="button"
+                    id="resetFilters"
+                    class="secondary-btn"
+                >
+                    Reset
+                </button>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 TABLE
+            ================================================== -->
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ID
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Merchant
+                            </th>
+
+                            <th>
+                                Location
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Probability
+                            </th>
+
+                            <th>
+                                Risk
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="transactionTableBody">
+
+                        <tr>
+
+                            <td
+                                colspan="10"
+                                class="empty-state"
+                            >
+                                Loading transactions...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- =================================================
+                 EMPTY RESULT
+            ================================================== -->
+
+            <div
+                id="noTransactions"
+                class="empty-state hidden"
+            >
+
+                <div class="empty-icon">
+                    📭
+                </div>
+
+                <h3>
+                    No Transactions Found
+                </h3>
+
+                <p>
+                    No transactions match the selected filters.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         DELETE CONFIRMATION MODAL
+    ====================================================== -->
+
+    <div
+        id="deleteModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content">
+
+
+            <div class="modal-icon">
+                ⚠️
+            </div>
+
+
+            <h2>
+                Delete Transaction?
+            </h2>
+
+
+            <p>
+                This transaction will be permanently removed
+                from the database.
+            </p>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    id="cancelDelete"
+                    class="secondary-btn"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="button"
+                    id="confirmDelete"
+                    class="danger-btn"
+                >
+                    Delete
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script
+        src="{{ url_for('static', filename='common.js') }}"
+    ></script>
+
+    <script
+        src="{{ url_for('static', filename='transactions.js') }}"
+    ></script>
+
+
+</body>
+
+</html>
