@@ -261,6 +261,8 @@ async function loadDashboard() {
         const totalAmount =
             data.totalAmount ??
             data.total_amount ??
+            data.totalValue ??
+            data.total_value ??
             0;
 
 

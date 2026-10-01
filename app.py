@@ -857,17 +857,21 @@ def delete_transaction(transaction_id):
 @app.route("/stats")
 def stats():
 
-    conn=get_db_connection()
+    conn = get_db_connection()
 
     if not conn:
         return jsonify({
-            "success":False,
-            "message":"Database connection failed."
-        }),500
+            "success": False,
+            "message": "Database connection failed."
+        }), 500
 
-    cursor=conn.cursor(dictionary=True)
+    cursor = conn.cursor(dictionary=True)
 
     try:
+
+        # =========================
+        # TRANSACTION STATISTICS
+        # =========================
 
         cursor.execute("""
             SELECT
@@ -875,32 +879,32 @@ def stats():
 
                 SUM(
                     CASE
-                        WHEN status='FRAUD'
+                        WHEN status = 'FRAUD'
                         THEN 1 ELSE 0
                     END
                 ) AS fraud_transactions,
 
                 SUM(
                     CASE
-                        WHEN status='GENUINE'
+                        WHEN status = 'GENUINE'
                         THEN 1 ELSE 0
                     END
                 ) AS genuine_transactions,
 
-                COALESCE(SUM(amount),0) AS total_value,
+                COALESCE(SUM(amount), 0) AS total_value,
 
-                COALESCE(AVG(amount),0) AS average_amount,
+                COALESCE(AVG(amount), 0) AS average_amount,
 
                 SUM(
                     CASE
-                        WHEN risk_level='HIGH'
+                        WHEN risk_level = 'HIGH'
                         THEN 1 ELSE 0
                     END
                 ) AS high_risk,
 
                 SUM(
                     CASE
-                        WHEN DATE(transaction_time)=CURDATE()
+                        WHEN DATE(transaction_time) = CURDATE()
                         THEN 1 ELSE 0
                     END
                 ) AS today_transactions
@@ -908,63 +912,107 @@ def stats():
             FROM `transaction`
         """)
 
-        data=cursor.fetchone()
+        data = cursor.fetchone()
 
-        total=int(
-            data["total_transactions"] or 0
+        total = int(data["total_transactions"] or 0)
+
+        fraud = int(data["fraud_transactions"] or 0)
+
+        genuine = int(data["genuine_transactions"] or 0)
+
+
+        # =========================
+        # TOTAL MERCHANTS
+        # =========================
+
+        cursor.execute("""
+            SELECT COUNT(DISTINCT merchant_id) AS total_merchants
+            FROM `transaction`
+            WHERE merchant_id IS NOT NULL
+        """)
+
+        merchant_data = cursor.fetchone()
+
+        total_merchants = int(
+            merchant_data["total_merchants"] or 0
         )
 
-        fraud=int(
-            data["fraud_transactions"] or 0
+        # =========================
+        # TOTAL CUSTOMERS
+        # =========================
+
+        cursor.execute("""
+            SELECT COUNT(DISTINCT a.customer_id) AS total_customers
+            FROM `transaction` t
+            INNER JOIN account a
+                ON t.account_id = a.account_id
+            WHERE a.customer_id IS NOT NULL
+        """)
+
+        customer_data = cursor.fetchone()
+
+        total_customers = int(
+            customer_data["total_customers"] or 0
         )
 
-        genuine=int(
-            data["genuine_transactions"] or 0
-        )
+
+        # =========================
+        # RESPONSE
+        # =========================
 
         return jsonify({
-            "success":True,
-            "total_transactions":total,
-            "fraud_transactions":fraud,
-            "genuine_transactions":genuine,
 
-            "fraud_rate":round(
-                fraud/total*100,2
+            "success": True,
+
+            "total_transactions": total,
+
+            "fraud_transactions": fraud,
+
+            "genuine_transactions": genuine,
+
+            "fraud_rate": round(
+                fraud / total * 100, 2
             ) if total else 0,
 
-            "total_value":float(
+            "total_value": float(
                 data["total_value"] or 0
             ),
 
-            "average_amount":float(
+            "average_amount": float(
                 data["average_amount"] or 0
             ),
 
-            "high_risk":int(
+            "high_risk": int(
                 data["high_risk"] or 0
             ),
 
-            "today_transactions":int(
+            "today_transactions": int(
                 data["today_transactions"] or 0
             ),
 
-            "total":total,
-            "fraud":fraud,
-            "genuine":genuine
+            "total_merchants": total_merchants,
+
+            "total_customers": total_customers,
+
+            # aliases used by frontend
+            "total": total,
+            "fraud": fraud,
+            "genuine": genuine
         })
 
     except Exception as e:
 
+        print("Stats Error:", e)
+
         return jsonify({
-            "success":False,
-            "message":str(e)
-        }),500
+            "success": False,
+            "message": str(e)
+        }), 500
 
     finally:
 
         cursor.close()
         conn.close()
-
 # =========================
 # ANALYTICS
 # =========================
